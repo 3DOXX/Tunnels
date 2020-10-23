@@ -10,17 +10,28 @@ uses
   App in 'App\App.pas',
   App.Console in 'App\App.Console.pas',
   App.EventHandler in 'App\App.EventHandler.pas',
-  App.Window in 'App\App.Window.pas';
+  App.Window in 'App\App.Window.pas',
+  Game in 'Game\Game.pas',
+  Game.Graphics in 'Game\Game.Graphics.pas',
+  Interfaces.Console in 'Interfaces\Interfaces.Console.pas',
+  Interfaces.Window in 'Interfaces\Interfaces.Window.pas',
+  Interfaces.App in 'Interfaces\Interfaces.App.pas',
+  App.Utils in 'App\App.Utils.pas',
+  Game.Renderer in 'Game\Game.Renderer.pas';
 
 { *************************************************************************** }
 var
-  FApp : TApp;
+  FApp  : TApp;
+  FGame : TGame;
 { *************************************************************************** }
 begin
   try
-    FApp := TApp.Create;
+    FApp  := TApp.Create;
+    FGame := TGame.Create(FApp);
+    FApp.Activity := FGame;
     FApp.EventHandler.HandleEvents;
-    FreeAndNil(FApp);
+    TryFreeAndNil(FGame);
+    TryFreeAndNil(FApp);
   except
     on E : Exception do
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
