@@ -1,49 +1,35 @@
-unit App.EventHandler;
+unit App.Window;
 { *************************************************************************** }
 interface
-{ *************************************************************************** }
-type
-  TActivityEvent = procedure of object;
-{ *************************************************************************** }
-  TEventHandler = class
-    private
-      FOnUpdate : TActivityEvent;
-    public
-      constructor Create;
-
-      procedure HandleEvents;
-
-      property OnUpdateEvent : TActivityEvent read FOnUpdate write FOnUpdate;
-  end;
-{ *************************************************************************** }
-implementation
 { *************************************************************************** }
 uses
   SDL2;
 { *************************************************************************** }
+type
+  TWindow = class
+    private
+      FHandle : PSDL_Window;
+    public
+      constructor Create;
+      destructor  Destroy; override;
+  end;
+{ *************************************************************************** }
+implementation
+{ *************************************************************************** }
 { PUBLIC                                                                      }
 { *************************************************************************** }
-constructor TEventHandler.Create;
+constructor TWindow.Create;
 begin
-  FOnUpdate := nil;
+  FHandle := SDL_CreateWindow('tunnels',
+                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                              800, 600,
+                              SDL_WINDOW_OPENGL);
 end;
 { *************************************************************************** }
-procedure TEventHandler.HandleEvents;
-var
-  LRunning : boolean;
-  LEvent   : TSDL_Event;
+destructor TWindow.Destroy;
 begin
-  LRunning := true;
-  while LRunning do
-  begin
-    while SDL_PollEvent(@LEvent) > 0 do
-       case LEvent.type_ of
-         SDL_QUITEV : LRunning := False;
-       end;
-
-    if Assigned(FOnUpdate) then
-      FOnUpdate;
-  end;
+  SDL_DestroyWindow(FHandle);
+  inherited;
 end;
 { *************************************************************************** }
 end.

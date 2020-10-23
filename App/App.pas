@@ -5,7 +5,8 @@ interface
 uses
   App.Console,
   App.EventHandler,
-  App.Activity;
+  App.Activity,
+  App.Window;
 { *************************************************************************** }
 type
   TApp = class
@@ -13,6 +14,7 @@ type
       FConsole      : TConsole;
       FEventHandler : TEventHandler;
       FActivity     : TActivity;
+      FWindow       : TWindow;
       function InitSDL : boolean;
       procedure SetActivity(const _Activity : TActivity);
     public
@@ -37,6 +39,7 @@ begin
   if InitSDL then
   begin
     FEventHandler := TEventHandler.Create;
+    FWindow       := TWindow.Create;
   end
   else
     raise Exception.Create(string(SDL_GetError));
@@ -44,6 +47,7 @@ end;
 { *************************************************************************** }
 destructor TApp.Destroy;
 begin
+  FreeAndNil(FWindow);
   FreeAndNil(FEventHandler);
   FreeAndNil(FConsole);
   SDL_Quit;
