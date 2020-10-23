@@ -2,10 +2,16 @@ unit App.Activity;
 { *************************************************************************** }
 interface
 { *************************************************************************** }
+uses
+  Interfaces.App;
+{ *************************************************************************** }
 type
   TActivity = class
-    private
+    protected
+      FApp : IApp;
     public
+      constructor Create(const _App : IApp);
+
       procedure OnLoad; virtual;
       procedure OnUpdate; virtual;
   end;
@@ -13,6 +19,11 @@ type
 implementation
 { *************************************************************************** }
 { PUBLIC                                                                      }
+{ *************************************************************************** }
+constructor TActivity.Create(const _App : IApp);
+begin
+  FApp := _App;
+end;
 { *************************************************************************** }
 procedure TActivity.OnLoad;
 begin

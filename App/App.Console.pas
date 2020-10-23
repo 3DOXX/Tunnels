@@ -3,7 +3,8 @@ unit App.Console;
 interface
 { *************************************************************************** }
 uses
-  Windows ;
+  Windows,
+  Interfaces.Console;
 { *************************************************************************** }
 type
   ETextColor = ( TEXT_COLOR_WHITE  = FOREGROUND_RED or FOREGROUND_GREEN or FOREGROUND_BLUE ,
@@ -11,7 +12,7 @@ type
                  TEXT_COLOR_YELLOW = FOREGROUND_RED or FOREGROUND_GREEN ,
                  TEXT_COLOR_GREEN  = FOREGROUND_GREEN ) ;
 { *************************************************************************** }
-  TConsole = class
+  TConsole = class(TInterfacedObject, IConsole)
     private
       procedure Output(const _Text      : string;
                        const _Linebreak : Boolean;

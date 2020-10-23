@@ -6,10 +6,13 @@ uses
   App.Console,
   App.EventHandler,
   App.Activity,
-  App.Window;
+  App.Window,
+  Interfaces.App,
+  Interfaces.Console,
+  Interfaces.Window;
 { *************************************************************************** }
 type
-  TApp = class
+  TApp = class(TInterfacedObject, IApp)
     private
       FConsole      : TConsole;
       FEventHandler : TEventHandler;
@@ -17,6 +20,9 @@ type
       FWindow       : TWindow;
       function InitSDL : boolean;
       procedure SetActivity(const _Activity : TActivity);
+    protected
+      function GetConsole : IConsole;
+      function GetWindow  : IWindow;
     public
       constructor Create;
       destructor  Destroy; override;
@@ -35,6 +41,7 @@ uses
 { *************************************************************************** }
 constructor TApp.Create;
 begin
+  inherited;
   FConsole  := TConsole.Create;
   if InitSDL then
   begin
@@ -52,6 +59,18 @@ begin
   FreeAndNil(FConsole);
   SDL_Quit;
   inherited;
+end;
+{ *************************************************************************** }
+{ PROTECTED                                                                   }
+{ *************************************************************************** }
+function TApp.GetConsole : IConsole;
+begin
+  Result := FConsole;
+end;
+{ *************************************************************************** }
+function TApp.GetWindow : IWindow;
+begin
+  Result := FWindow;
 end;
 { *************************************************************************** }
 { PRIVATE                                                                     }
