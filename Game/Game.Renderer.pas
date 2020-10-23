@@ -1,46 +1,51 @@
-unit Game;
+unit Game.Renderer;
 { *************************************************************************** }
 interface
 { *************************************************************************** }
 uses
-  App.Activity,
-  Game.Graphics,
-  Game.Renderer;
+  SDL2,
+  dglOpenGl,
+  Interfaces.Window;
 { *************************************************************************** }
 type
-  TGame = class(TActivity)
+  TRenderer = class
     private
-      FGraphics : TGraphics;
-      FRenderer : TRenderer;
+      FWindow  : IWindow;
+      FContext : TSDL_GlContext;
     public
-      procedure OnLoad; override;
-      procedure OnUpdate; override;
-      procedure OnFinish; override;
+      constructor Create(const _Window : IWindow);
+      destructor  Destroy; override;
+
+      procedure Clear;
+      procedure SwapBuffers;
   end;
 { *************************************************************************** }
 implementation
 { *************************************************************************** }
-uses
-  SysUtils;
-{ *************************************************************************** }
 { PUBLIC                                                                      }
 { *************************************************************************** }
-procedure TGame.OnFinish;
+procedure TRenderer.Clear;
 begin
-  FreeAndNil(FRenderer);
-  FreeAndNil(FGraphics);
+  glClear(GL_COLOR_BUFFER_BIT);
 end;
 { *************************************************************************** }
-procedure TGame.OnLoad;
+procedure TRenderer.SwapBuffers;
 begin
-  FGraphics := TGraphics.Create(FApp.Console);
-  FRenderer := TRenderer.Create(FApp.Window);
+  SDL_GL_SwapWindow(FWindow.Handle);
 end;
 { *************************************************************************** }
-procedure TGame.OnUpdate;
+constructor TRenderer.Create(const _Window : IWindow);
 begin
-  FRenderer.Clear;
-  FRenderer.SwapBuffers;
+  FWindow  := _Window;
+  FContext := SDL_GL_CreateContext(FWindow.Handle);
+
+  glClearColor(0.1, 0.2, 0.3, 1);
+end;
+{ *************************************************************************** }
+destructor TRenderer.Destroy;
+begin
+  SDL_GL_DeleteContext(FContext);
+  inherited;
 end;
 { *************************************************************************** }
 end.

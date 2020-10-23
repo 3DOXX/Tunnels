@@ -8,12 +8,14 @@ type
   TEventHandler = class
     private
       FOnUpdate : TActivityEvent;
+      FOnFinish : TActivityEvent;
     public
       constructor Create;
 
       procedure HandleEvents;
 
       property OnUpdateEvent : TActivityEvent read FOnUpdate write FOnUpdate;
+      property OnFinishEvent : TActivityEvent read FOnFinish write FOnFinish;
   end;
 { *************************************************************************** }
 implementation
@@ -44,6 +46,8 @@ begin
     if Assigned(FOnUpdate) then
       FOnUpdate;
   end;
+  if Assigned(FOnFinish) then
+    FOnFinish;
 end;
 { *************************************************************************** }
 end.

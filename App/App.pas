@@ -90,11 +90,13 @@ end;
 procedure TApp.SetActivity(const _Activity : TActivity);
 begin
   FEventHandler.OnUpdateEvent := nil;
+  FEventHandler.OnFinishEvent := nil;
   FActivity := _Activity;
   if _Activity <> nil then
   begin
     FActivity.OnLoad;
     FEventHandler.OnUpdateEvent := FActivity.OnUpdate;
+    FEventHandler.OnFinishEvent := FActivity.OnFinish;
   end;
 end;
 { *************************************************************************** }
