@@ -3,16 +3,20 @@ unit App;
 interface
 { *************************************************************************** }
 uses
-  App.Console;
+  App.Console,
+  App.EventHandler;
 { *************************************************************************** }
 type
   TApp = class
     private
-      FConsole : TConsole;
+      FConsole      : TConsole;
+      FEventHandler : TEventHandler;
       function InitSDL : boolean;
     public
       constructor Create;
       destructor  Destroy; override;
+
+      property EventHandler : TEventHandler read FEventHandler;
   end;
 { *************************************************************************** }
 implementation
@@ -28,7 +32,7 @@ begin
   FConsole := TConsole.Create;
   if InitSDL then
   begin
-    // ...
+    FEventHandler := TEventHandler.Create;
   end
   else
     raise Exception.Create(string(SDL_GetError));
@@ -36,6 +40,7 @@ end;
 { *************************************************************************** }
 destructor TApp.Destroy;
 begin
+  FreeAndNil(FEventHandler);
   FreeAndNil(FConsole);
   SDL_Quit;
   inherited;
