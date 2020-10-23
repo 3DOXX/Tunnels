@@ -4,19 +4,23 @@ interface
 { *************************************************************************** }
 uses
   App.Console,
-  App.EventHandler;
+  App.EventHandler,
+  App.Activity;
 { *************************************************************************** }
 type
   TApp = class
     private
       FConsole      : TConsole;
       FEventHandler : TEventHandler;
+      FActivity     : TActivity;
       function InitSDL : boolean;
+      procedure SetActivity(const _Activity : TActivity);
     public
       constructor Create;
       destructor  Destroy; override;
 
       property EventHandler : TEventHandler read FEventHandler;
+      property Activity     : TActivity     read FActivity write SetActivity;
   end;
 { *************************************************************************** }
 implementation
@@ -29,7 +33,7 @@ uses
 { *************************************************************************** }
 constructor TApp.Create;
 begin
-  FConsole := TConsole.Create;
+  FConsole  := TConsole.Create;
   if InitSDL then
   begin
     FEventHandler := TEventHandler.Create;
@@ -56,6 +60,17 @@ begin
     FConsole.LogSuccess
   else
     FConsole.LogError(string(SDL_GetError));
+end;
+{ *************************************************************************** }
+procedure TApp.SetActivity(const _Activity : TActivity);
+begin
+  FEventHandler.OnUpdateEvent := nil;
+  FActivity := _Activity;
+  if _Activity <> nil then
+  begin
+    FActivity.OnLoad;
+    FEventHandler.OnUpdateEvent := FActivity.OnUpdate;
+  end;
 end;
 { *************************************************************************** }
 end.
