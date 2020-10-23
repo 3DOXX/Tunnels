@@ -14,7 +14,7 @@ begin
   if _Object is TInterfacedObject then
   begin
     if (_Object as TInterfacedObject).RefCount > 0 then
-      FreeAndNil(_Object);
+      _Object := nil;
   end
   else
     FreeAndNil(_Object);

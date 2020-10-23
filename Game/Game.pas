@@ -21,7 +21,7 @@ implementation
 { *************************************************************************** }
 procedure TGame.OnLoad;
 begin
-  FGraphics := TGraphics.Create;
+  FGraphics := TGraphics.Create(FApp.Console);
 end;
 { *************************************************************************** }
 procedure TGame.OnUpdate;

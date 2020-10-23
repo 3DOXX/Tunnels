@@ -35,7 +35,8 @@ implementation
 { *************************************************************************** }
 uses
   SysUtils,
-  SDL2;
+  SDL2,
+  App.Utils;
 { *************************************************************************** }
 { PUBLIC                                                                      }
 { *************************************************************************** }
@@ -43,6 +44,7 @@ constructor TApp.Create;
 begin
   inherited;
   FConsole  := TConsole.Create;
+  FConsole.ShowConsole;
   if InitSDL then
   begin
     FEventHandler := TEventHandler.Create;
@@ -54,9 +56,9 @@ end;
 { *************************************************************************** }
 destructor TApp.Destroy;
 begin
-  FreeAndNil(FWindow);
-  FreeAndNil(FEventHandler);
-  FreeAndNil(FConsole);
+  TryFreeAndNil(FWindow);
+  TryFreeAndNil(FEventHandler);
+  TryFreeAndNil(FConsole);
   SDL_Quit;
   inherited;
 end;
