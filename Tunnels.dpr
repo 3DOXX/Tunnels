@@ -17,7 +17,12 @@ uses
   Interfaces.Window in 'Interfaces\Interfaces.Window.pas',
   Interfaces.App in 'Interfaces\Interfaces.App.pas',
   App.Utils in 'App\App.Utils.pas',
-  Game.Renderer in 'Game\Game.Renderer.pas';
+  Game.Renderer in 'Game\Game.Renderer.pas',
+  Graphics.Shader in 'Graphics\Graphics.Shader.pas',
+  App.Resources in 'App\App.Resources.pas',
+  Graphics.Drawable in 'Graphics\Graphics.Drawable.pas',
+  Graphics.VertexBuffer in 'Graphics\Graphics.VertexBuffer.pas',
+  Graphics.VertexArray in 'Graphics\Graphics.VertexArray.pas';
 
 { *************************************************************************** }
 var
