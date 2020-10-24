@@ -4,19 +4,20 @@ interface
 { *************************************************************************** }
 uses
   Interfaces.Console,
-  dglOpenGl;
+  dglOpenGl,
+  App.Resources;
 { *************************************************************************** }
 type
   TShader = class
     private
       FConsole : IConsole;
       FHandle  : GlHandle;
-      procedure Compile(const _Source : AnsiString;
+      procedure Compile(const _Source : TShaderResource;
                         const _Type   : GLenum);
     public
-      constructor CreateFromFile(const _Console        : IConsole;
-                                 const _VertexShader   : string;
-                                 const _FragmentShader : string);
+      constructor Create(const _Console        : IConsole;
+                         const _VertexShader   : TShaderResource;
+                         const _FragmentShader : TShaderResource);
       procedure Activate;
   end;
 { *************************************************************************** }
@@ -28,20 +29,32 @@ uses
 { *************************************************************************** }
 { PRIVATE                                                                     }
 { *************************************************************************** }
-procedure TShader.Compile(const _Source : AnsiString;
+procedure TShader.Compile(const _Source : TShaderResource;
                           const _Type   : GLenum);
 var
   LShader  : GlHandle;
   LResult  : GlInt;
   LInfoLog : AnsiString;
+  LSource  : AnsiString;
 begin
+  // Get Source Data
   LShader := glCreateShader(_Type);
-  glShaderSource(LShader, 1, @_Source, nil);
-
-  FConsole.LogMessage('Compiling shader...', False);
+  LSource := _Source.GetData;
+  glShaderSource(LShader, 1, @LSource, nil);
+  // Output to Console
+  FConsole.LogMessage('Compiling ', False);
+  case _Type of
+    GL_VERTEX_SHADER   : FConsole.LogMessage('Vertex-Shader', False);
+    GL_FRAGMENT_SHADER : FConsole.LogMessage('Fragment-Shader', False);
+  end;
+  case _Source.Source of
+    SOURCE_TYPE_FILE : FConsole.LogMessage(' "' + _Source.Filename + '"', False);
+  end;
+  FConsole.LogMessage('...', False);
+  // Compile
   glCompileShader(LShader);
   glGetShaderiv(LShader, GL_COMPILE_STATUS, @LResult);
-
+  // Evaluate Compilation
   if LResult = 1 then
   begin
     glAttachShader(FHandle, LShader);
@@ -54,7 +67,7 @@ begin
     glGetShaderInfoLog(LShader, LResult, @LResult, @LInfoLog[1]);
     FConsole.LogError(string(LInfoLog));
   end;
-
+  // Cleanup
   glDeleteShader(LShader);
 end;
 { *************************************************************************** }
@@ -65,15 +78,15 @@ begin
   glUseProgram(FHandle);
 end;
 { *************************************************************************** }
-constructor TShader.CreateFromFile(const _Console        : IConsole;
-                                   const _VertexShader   : string;
-                                   const _FragmentShader : string);
+constructor TShader.Create(const _Console        : IConsole;
+                           const _VertexShader   : TShaderResource;
+                           const _FragmentShader : TShaderResource);
 begin
   FConsole := _Console;
   FHandle  := glCreateProgram;
 
-  Compile(AnsiString(TFile.ReadAllText(_VertexShader, TEncoding.ANSI)), GL_VERTEX_SHADER);
-  Compile(AnsiString(TFile.ReadAllText(_FragmentShader, TEncoding.ANSI)), GL_FRAGMENT_SHADER);
+  Compile(_VertexShader, GL_VERTEX_SHADER);
+  Compile(_FragmentShader, GL_FRAGMENT_SHADER);
 
   glLinkProgram(FHandle);
 end;
