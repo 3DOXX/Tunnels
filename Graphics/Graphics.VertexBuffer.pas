@@ -6,7 +6,7 @@ uses
   dglOpenGl;
 { *************************************************************************** }
 type
-  TVertexData = array of Single;
+  TVertexData = array[0..8] of Single;
 { *************************************************************************** }
   TVertexBuffer = class
     private

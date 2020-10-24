@@ -37,6 +37,7 @@ begin
   Activate;
   _Buffer.Activate;
   glVertexAttribPointer(FAttributes, _Size, _Type, GL_FALSE, 0, nil);
+  glEnableVertexAttribArray(FAttributes);
   inc(FAttributes);
 end;
 { *************************************************************************** }
